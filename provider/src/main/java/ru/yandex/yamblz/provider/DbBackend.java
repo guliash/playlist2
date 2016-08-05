@@ -23,14 +23,11 @@ public class DbBackend {
         mDbOpenHelper = dbOpenHelper;
     }
 
-    public Cursor getSingers() {
-        return getSingers("");
-    }
-
-    @Nullable public Cursor getSingers(@NonNull String prefixName) {
+    @Nullable public Cursor getSingers(@Nullable String[] projection, @Nullable String selection,
+                                       @Nullable String[] selectionArgs, @Nullable String sortOrder) {
         SQLiteDatabase database = mDbOpenHelper.getReadableDatabase();
-        Cursor cursor = database.query(Singers.TABLE_NAME, null, Singers.NAME + " LIKE ?",
-                new String[] { prefixName + "%" }, null, null, null);
+        Cursor cursor = database.query(Singers.TABLE_NAME, projection, selection, selectionArgs, null,
+                null, sortOrder);
         if(cursor != null) {
             cursor.moveToFirst();
         }

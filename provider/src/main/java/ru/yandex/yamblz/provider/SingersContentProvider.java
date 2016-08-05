@@ -48,7 +48,7 @@ public class SingersContentProvider extends ContentProvider {
         }
         switch (sUriMatcher.match(uri)) {
             case GET_SINGERS:
-                return mDbBackend.getSingers();
+                return mDbBackend.getSingers(projection, selection, selectionArgs, sortOrder);
             case GET_SINGERS_BY_ID:
                 throw new IllegalArgumentException("Not implemented- " + uri.toString());
             default:

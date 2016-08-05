@@ -1,6 +1,7 @@
 package ru.yandex.yamblz.provider;
 
 import android.content.Context;
+import android.support.v4.database.DatabaseUtilsCompat;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
