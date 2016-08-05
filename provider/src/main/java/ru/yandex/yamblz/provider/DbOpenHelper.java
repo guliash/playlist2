@@ -4,6 +4,8 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import java.util.List;
+
 import static ru.yandex.yamblz.provider.DbContract.*;
 
 public class DbOpenHelper extends SQLiteOpenHelper {
@@ -49,7 +51,7 @@ public class DbOpenHelper extends SQLiteOpenHelper {
         db.execSQL("CREATE TABLE " + SingersGenres.TABLE_NAME + "(" +
             SingersGenres.SINGER_ID + " INTEGER REFERENCES " + Singers.TABLE_NAME +
                 "(" + Singers.ID + ") ON UPDATE CASCADE ON DELETE CASCADE, " +
-            SingersGenres.GENRE_ID + " INTEGER REFERENCES" + Genres.TABLE_NAME +
+            SingersGenres.GENRE_ID + " INTEGER REFERENCES " + Genres.TABLE_NAME +
                 "(" + Genres.ID + ") ON UPDATE CASCADE ON DELETE CASCADE)");
     }
 

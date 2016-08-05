@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="ru.yandex.yamblz.playlist2">
-    <uses-permission android:name="ru.yandex.yamblz.provider.SINGERS"/>
+    <uses-permission android:name="ru.yandex.yamblz.provider.READ_SINGERS"/>
+    <uses-permission android:name="ru.yandex.yamblz.provider.WRITE_SINGERS"/>
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"

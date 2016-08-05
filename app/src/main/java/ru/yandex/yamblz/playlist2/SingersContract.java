@@ -1,10 +1,7 @@
-package ru.yandex.yamblz.provider;
+package ru.yandex.yamblz.playlist2;
 
 import android.net.Uri;
 
-/**
- * Contract for {@link SingersContentProvider}
- */
 public final class SingersContract {
 
     public static final String AUTHORITY = "ru.yandex.yamblz.provider";
