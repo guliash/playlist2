@@ -1,10 +1,13 @@
 package ru.yandex.yamblz.provider;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+
+import java.util.List;
 
 import static ru.yandex.yamblz.provider.DbContract.Singers;
 
@@ -26,11 +29,32 @@ public class DbBackend {
 
     @Nullable public Cursor getSingers(@NonNull String prefixName) {
         SQLiteDatabase database = mDbOpenHelper.getReadableDatabase();
-        Cursor cursor = database.query(Singers.TABLE_NAME, null, Singers.NAME + " LIKE ?", new String[] {
-                prefixName + "%"}, null, null, null);
+        Cursor cursor = database.query(Singers.TABLE_NAME, null, Singers.NAME + " LIKE ?",
+                new String[] { prefixName + "%" }, null, null, null);
         if(cursor != null) {
             cursor.moveToFirst();
         }
         return cursor;
+    }
+
+    public void insertSingers(List<Singer> singers) {
+        SQLiteDatabase db = mDbOpenHelper.getWritableDatabase();
+        db.beginTransaction();
+        boolean success = true;
+        for(Singer singer : singers) {
+            ContentValues cv = new ContentValues();
+            cv.put(Singers.ID, singer.getId());
+            cv.put(Singers.NAME, singer.getName());
+            cv.put(Singers.DESCRIPTION, singer.getDescription());
+            cv.put(Singers.TRACKS, singer.getTracks());
+            cv.put(Singers.ALBUMS, singer.getAlbums());
+            cv.put(Singers.COVER_SMALL, singer.getCover().getSmall());
+            cv.put(Singers.COVER_BIG, singer.getCover().getBig());
+            success &= (db.insert(Singers.TABLE_NAME, null, cv) != -1);
+        }
+        if(success) {
+            db.setTransactionSuccessful();
+        }
+        db.endTransaction();
     }
 }
