@@ -6,6 +6,9 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 
 import java.util.List;
 import java.util.concurrent.Executor;
@@ -28,16 +31,13 @@ public class MainActivity extends AppCompatActivity {
     @BindView(R.id.tabs)
     TabLayout tabLayout;
 
+    @Nullable
+    @BindView(R.id.singers_list)
+    RecyclerView singersList;
+
     private DataProvider mDataProvider;
 
     private Handler mUiHandler;
-    private DataProvider.Callback<List<Singer>> mSingersCallback = new DataProvider.Callback<List<Singer>>() {
-        @Override
-        public void postResult(List<Singer> result) {
-            singersPager.setAdapter(new SingersPagerAdapter(getSupportFragmentManager(), result));
-            tabLayout.setupWithViewPager(singersPager);
-        }
-    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,8 +51,8 @@ public class MainActivity extends AppCompatActivity {
 
         mPortrait = findViewById(R.id.desc_holder) == null;
 
-        if(mPortrait) {
-            mDataProvider.getSingers(mSingersCallback);
+        if(!mPortrait) {
+            singersList.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         }
 
     }
@@ -76,8 +76,26 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        mDataProvider.getSingers(mSingersCallback);
+    }
+
+    @Override
     protected void onPause() {
         super.onPause();
         mDataProvider.cancel(mSingersCallback);
     }
+
+    private DataProvider.Callback<List<Singer>> mSingersCallback = new DataProvider.Callback<List<Singer>>() {
+        @Override
+        public void postResult(List<Singer> result) {
+            if(mPortrait) {
+                singersPager.setAdapter(new SingersPagerAdapter(getSupportFragmentManager(), result));
+                tabLayout.setupWithViewPager(singersPager);
+            } else {
+                singersList.setAdapter(new SingersAdapter(result));
+            }
+        }
+    };
 }

@@ -1,4 +1,6 @@
 <resources>
     <string name="app_name">playlist2</string>
     <string name="get">GET</string>
+    <string name="name_label">Name:</string>
+    <string name="tracks_label">tracks</string>
 </resources>
