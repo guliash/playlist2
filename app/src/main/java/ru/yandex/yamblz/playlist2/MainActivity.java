@@ -1,30 +1,43 @@
 package ru.yandex.yamblz.playlist2;
 
-import android.database.Cursor;
-import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
+import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Executor;
+import java.util.concurrent.LinkedBlockingDeque;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-
-import static ru.yandex.yamblz.playlist2.SingersContract.*;
 
 public class MainActivity extends AppCompatActivity {
 
     private boolean mPortrait;
 
+    @Nullable
     @BindView(R.id.singers_pager)
     ViewPager singersPager;
 
+    @Nullable
     @BindView(R.id.tabs)
     TabLayout tabLayout;
+
+    private DataProvider mDataProvider;
+
+    private Handler mUiHandler;
+    private DataProvider.Callback<List<Singer>> mSingersCallback = new DataProvider.Callback<List<Singer>>() {
+        @Override
+        public void postResult(List<Singer> result) {
+            singersPager.setAdapter(new SingersPagerAdapter(getSupportFragmentManager(), result));
+            tabLayout.setupWithViewPager(singersPager);
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,39 +45,39 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         ButterKnife.bind(this);
+        mUiHandler = new Handler();
+
+        mDataProvider = new CPDataProvider(this, new CPDataTransformer(), worker(), poster());
 
         mPortrait = findViewById(R.id.desc_holder) == null;
-        Cursor cursor = getContentResolver().query(Singers.CONTENT_URI, null, null, null, null);
-        Log.e("TAG", "COUNT " + cursor.getCount());
-        List<Singer> singers = transformCursor(cursor);
-
 
         if(mPortrait) {
-            singersPager.setAdapter(new SingersPagerAdapter(getSupportFragmentManager(), singers));
-            tabLayout.setupWithViewPager(singersPager);
+            mDataProvider.getSingers(mSingersCallback);
         }
 
     }
 
-    private List<Singer> transformCursor(Cursor cursor) {
-        List<Singer> singers = new ArrayList<>();
-        if(cursor != null) {
-            cursor.moveToFirst();
-            while(!cursor.isAfterLast()) {
-                Singer.Builder builder = new Singer.Builder();
-                builder.id(cursor.getInt(cursor.getColumnIndex(Singers.ID)))
-                        .name(cursor.getString(cursor.getColumnIndex(Singers.NAME)))
-                        .tracks(cursor.getInt(cursor.getColumnIndex(Singers.TRACKS)))
-                        .albums(cursor.getInt(cursor.getColumnIndex(Singers.ALBUMS)))
-                        .cover(new Cover(
-                                cursor.getString(cursor.getColumnIndex(Singers.COVER_SMALL)),
-                                cursor.getString(cursor.getColumnIndex(Singers.COVER_BIG))
-                        ))
-                        .description(cursor.getString(cursor.getColumnIndex(Singers.DESCRIPTION)));
-                singers.add(builder.build());
-                cursor.moveToNext();
+    private Executor worker() {
+        return new ThreadPoolExecutor(4, 10, 120, TimeUnit.SECONDS, new LinkedBlockingDeque<Runnable>());
+    }
+
+    private Executor poster() {
+        return new Executor() {
+            @Override
+            public void execute(final Runnable command) {
+                mUiHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        command.run();
+                    }
+                });
             }
-        }
-        return singers;
+        };
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        mDataProvider.cancel(mSingersCallback);
     }
 }
