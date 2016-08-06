@@ -22,7 +22,7 @@ public final class SingersContract {
          * ID column
          * TYPE: INTEGER
          */
-        public static final String ID = "_id";
+        public static final String ID = "id";
 
         /**
          * Name column

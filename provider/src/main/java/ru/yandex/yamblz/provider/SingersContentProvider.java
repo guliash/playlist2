@@ -1,6 +1,7 @@
 package ru.yandex.yamblz.provider;
 
 import android.content.ContentProvider;
+import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -8,6 +9,7 @@ import android.content.UriMatcher;
 import android.database.Cursor;
 import android.net.Uri;
 import android.support.annotation.Nullable;
+import android.support.v4.database.DatabaseUtilsCompat;
 import android.util.Log;
 
 import java.util.List;
@@ -50,7 +52,11 @@ public class SingersContentProvider extends ContentProvider {
             case GET_SINGERS:
                 return mDbBackend.getSingers(projection, selection, selectionArgs, sortOrder);
             case GET_SINGERS_BY_ID:
-                throw new IllegalArgumentException("Not implemented- " + uri.toString());
+                long id = ContentUris.parseId(uri);
+                if(id != -1) {
+                    selection = DatabaseUtilsCompat.concatenateWhere(selection, Singers.ID + "=" + id);
+                }
+                return mDbBackend.getSingers(projection, selection, selectionArgs, sortOrder);
             default:
                 throw new IllegalArgumentException("Wrong query - " + uri.toString());
         }
@@ -99,6 +105,6 @@ public class SingersContentProvider extends ContentProvider {
     }
 
     private List<Singer> retrieveSingers() {
-        return new SingersProvider(getContext()).getSingers();
+        return new SingersAssetsProvider(getContext()).getSingers();
     }
 }

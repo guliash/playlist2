@@ -11,11 +11,11 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.List;
 
-public class SingersProvider {
+public class SingersAssetsProvider {
 
     private Context mContext;
 
-    public SingersProvider(Context context) {
+    public SingersAssetsProvider(Context context) {
         mContext = context;
     }
 
