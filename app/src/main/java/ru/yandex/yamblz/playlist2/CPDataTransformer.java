@@ -10,7 +10,7 @@ import java.util.List;
 import ru.yandex.yamblz.playlist2.structures.Cover;
 import ru.yandex.yamblz.playlist2.structures.Singer;
 
-import static ru.yandex.yamblz.playlist2.SingersContract.*;
+import static ru.yandex.yamblz.singerscontracts.SingersContract.*;
 
 public class CPDataTransformer implements DataTransformer {
     @Override

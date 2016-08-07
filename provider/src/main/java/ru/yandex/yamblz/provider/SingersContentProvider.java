@@ -14,8 +14,8 @@ import android.util.Log;
 
 import java.util.List;
 
-import static ru.yandex.yamblz.provider.SingersContract.AUTHORITY;
-import static ru.yandex.yamblz.provider.SingersContract.Singers;
+import static ru.yandex.yamblz.singerscontracts.SingersContract.AUTHORITY;
+import static ru.yandex.yamblz.singerscontracts.SingersContract.Singers;
 
 public class SingersContentProvider extends ContentProvider {
 

@@ -1,4 +1,4 @@
-package ru.yandex.yamblz.playlist2;
+package ru.yandex.yamblz.singerscontracts;
 
 import android.net.Uri;
 
@@ -10,9 +10,9 @@ public final class SingersContract {
 
     public static class Singers {
 
-        static final String TABLE_NAME = "singers";
+        public static final String TABLE_NAME = "singers";
 
-        public static final Uri CONTENT_URI = Uri.parse("content://" + AUTHORITY + "/" + TABLE_NAME);
+        public static final Uri CONTENT_URI = Uri.parse("content://" + AUTHORITY + "/singers");
 
         public static final String CONTENT_TYPE = "vnd.android.cursor.dir/vnd.ru.yandex.yamblz.provider.singers";
 
