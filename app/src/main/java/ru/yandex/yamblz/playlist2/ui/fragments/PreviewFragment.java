@@ -168,7 +168,7 @@ public class PreviewFragment extends BaseFragment {
 
     private void showSingerInfo() {
         photo.setImageDrawable(null);
-        Picasso.with(getContext()).load(mSinger.getCover().getSmall()).fit().into(photo);
+        Picasso.with(getContext()).load(mSinger.getCover().getSmall()).fit().centerInside().into(photo);
     }
 
 
