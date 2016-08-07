@@ -7,6 +7,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,6 +36,9 @@ public class DescFragment extends BaseDialogFragment {
 
     @BindView(R.id.name)
     TextView name;
+
+    @BindView(R.id.genres)
+    TextView genres;
 
     @BindView(R.id.tracks)
     TextView tracks;
@@ -136,6 +140,7 @@ public class DescFragment extends BaseDialogFragment {
     private void hideData() {
         //TODO
         name.setText("");
+        genres.setText("");
         tracks.setText("");
         albums.setText("");
         more.setText("");
@@ -149,6 +154,7 @@ public class DescFragment extends BaseDialogFragment {
         assert mSinger != null;
 
         name.setText(mSinger.getName());
+        genres.setText(TextUtils.join(", ", mSinger.getGenres()));
         tracks.setText(String.valueOf(mSinger.getTracks()));
         albums.setText(String.valueOf(mSinger.getAlbums()));
         more.setText(String.valueOf(mSinger.getDescription()));

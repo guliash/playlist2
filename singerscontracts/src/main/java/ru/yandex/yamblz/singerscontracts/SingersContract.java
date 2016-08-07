@@ -31,6 +31,12 @@ public final class SingersContract {
         public static final String NAME = "name";
 
         /**
+         * Name genres
+         * TYPE: TEXT comma separated
+         */
+        public static final String GENRES = "genres";
+
+        /**
          * Tracks column
          * TYPE: INTEGER
          */

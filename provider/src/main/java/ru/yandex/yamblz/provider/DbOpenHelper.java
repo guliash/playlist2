@@ -44,7 +44,7 @@ public class DbOpenHelper extends SQLiteOpenHelper {
     private void createGenresTable(SQLiteDatabase db) {
         db.execSQL("CREATE TABLE " + Genres.TABLE_NAME + "(" +
             Genres.ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-            Genres.NAME + "TEXT)");
+            Genres.NAME + " TEXT)");
     }
 
     private void createSingersGenresTable(SQLiteDatabase db) {

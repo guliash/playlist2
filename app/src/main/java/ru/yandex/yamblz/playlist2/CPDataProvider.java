@@ -13,7 +13,6 @@ import java.util.concurrent.Executor;
 
 import ru.yandex.yamblz.playlist2.structures.Singer;
 
-import static ru.yandex.yamblz.singerscontracts.SingersContract.CONTENT_URI;
 import static ru.yandex.yamblz.singerscontracts.SingersContract.Singers;
 
 /**

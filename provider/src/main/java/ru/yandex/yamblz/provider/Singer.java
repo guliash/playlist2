@@ -1,6 +1,9 @@
 package ru.yandex.yamblz.provider;
 
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class Singer {
 
@@ -113,6 +116,14 @@ public class Singer {
     @Override
     public String toString() {
         return name;
+    }
+
+    public static List<String> extractGenres(List<Singer> singers) {
+        Set<String> genres = new HashSet<>();
+        for(Singer singer : singers) {
+            genres.addAll(singer.getGenres());
+        }
+        return new ArrayList<>(genres);
     }
 
 }

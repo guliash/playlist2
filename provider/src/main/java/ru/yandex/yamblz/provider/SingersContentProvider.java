@@ -36,7 +36,6 @@ public class SingersContentProvider extends ContentProvider {
 
     @Override
     public boolean onCreate() {
-        Log.e("TAG", "ON CREATE CP");
         mDbBackend = new DbBackend(new DbOpenHelper(getContext()));
         return true;
     }
@@ -45,7 +44,7 @@ public class SingersContentProvider extends ContentProvider {
     @Override
     public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
         if(!checkIfSingersWereInserted()) {
-            mDbBackend.insertSingers(retrieveSingers());
+            mDbBackend.migrateSingers(retrieveSingers());
             setSingersInserted();
         }
         switch (sUriMatcher.match(uri)) {

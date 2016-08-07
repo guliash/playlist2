@@ -3,8 +3,10 @@ package ru.yandex.yamblz.playlist2;
 import android.database.Cursor;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import ru.yandex.yamblz.playlist2.structures.Cover;
@@ -13,6 +15,7 @@ import ru.yandex.yamblz.playlist2.structures.Singer;
 import static ru.yandex.yamblz.singerscontracts.SingersContract.*;
 
 public class CPDataTransformer implements DataTransformer {
+
     @Override
     @NonNull public List<Singer> toSingers(@Nullable Cursor cursor) {
         List<Singer> singers = new ArrayList<>();
@@ -35,12 +38,20 @@ public class CPDataTransformer implements DataTransformer {
         }
         cursor.moveToFirst();
 
-        return readSinger(cursor);
+        Singer singer = readSinger(cursor);
+        cursor.close();
+        return singer;
     }
 
     private Singer readSinger(@NonNull Cursor cursor) {
         Singer.Builder builder = new Singer.Builder();
+        String genresConcat = cursor.getString(cursor.getColumnIndex(Singers.GENRES));
+        List<String> genres = null;
+        if(!TextUtils.isEmpty(genresConcat)) {
+            genres = Arrays.asList(TextUtils.split(genresConcat, ","));
+        }
         builder.id(cursor.getInt(cursor.getColumnIndex(Singers.ID)))
+                .genres(genres)
                 .name(cursor.getString(cursor.getColumnIndex(Singers.NAME)))
                 .tracks(cursor.getInt(cursor.getColumnIndex(Singers.TRACKS)))
                 .albums(cursor.getInt(cursor.getColumnIndex(Singers.ALBUMS)))
