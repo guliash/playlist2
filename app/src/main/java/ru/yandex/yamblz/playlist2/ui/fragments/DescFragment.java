@@ -1,4 +1,4 @@
-package ru.yandex.yamblz.playlist2;
+package ru.yandex.yamblz.playlist2.ui.fragments;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -7,7 +7,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-public class DescFragment extends Fragment {
+import ru.yandex.yamblz.playlist2.R;
+import ru.yandex.yamblz.playlist2.structures.Singer;
+
+public class DescFragment extends BaseFragment {
 
     private static final String ID_EXTRA = "index";
     private static final String SINGER_EXTRA = "singer";

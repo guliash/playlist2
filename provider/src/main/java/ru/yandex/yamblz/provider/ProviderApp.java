@@ -10,6 +10,5 @@ public class ProviderApp extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        Log.e("TAG", "ON CREATE APP");
     }
 }

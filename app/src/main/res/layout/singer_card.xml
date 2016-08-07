@@ -13,8 +13,8 @@
         android:layout_height="wrap_content"
         android:padding="5dp">
         <ImageView
-            android:layout_width="@dimen/singer_cover"
-            android:layout_height="@dimen/singer_cover"
+            android:layout_width="@dimen/singer_cover_small"
+            android:layout_height="@dimen/singer_cover_small"
             android:scaleType="center"
             android:id="@+id/cover" />
         <TextView

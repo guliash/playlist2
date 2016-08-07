@@ -2,5 +2,9 @@
     <string name="app_name">playlist2</string>
     <string name="get">GET</string>
     <string name="name_label">Name:</string>
-    <string name="tracks_label">tracks</string>
+    <string name="tracks_label">Tracks:</string>
+    <string name="albums_label">Albums:</string>
+    <string name="description_label">More:</string>
+    <string name="more">More</string>
+    <string name="error">Error occured</string>
 </resources>

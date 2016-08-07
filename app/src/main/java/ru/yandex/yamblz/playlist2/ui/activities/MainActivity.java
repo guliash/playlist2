@@ -1,4 +1,4 @@
-package ru.yandex.yamblz.playlist2;
+package ru.yandex.yamblz.playlist2.ui.activities;
 
 import android.os.Bundle;
 import android.os.Handler;
@@ -8,7 +8,6 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 
 import java.util.List;
 import java.util.concurrent.Executor;
@@ -16,10 +15,20 @@ import java.util.concurrent.LinkedBlockingDeque;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
+import javax.inject.Inject;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import ru.yandex.yamblz.playlist2.CPDataProvider;
+import ru.yandex.yamblz.playlist2.CPDataTransformer;
+import ru.yandex.yamblz.playlist2.DataProvider;
+import ru.yandex.yamblz.playlist2.R;
+import ru.yandex.yamblz.playlist2.structures.Singer;
+import ru.yandex.yamblz.playlist2.ui.adapters.SingersAdapter;
+import ru.yandex.yamblz.playlist2.ui.adapters.SingersPagerAdapter;
+import ru.yandex.yamblz.playlist2.ui.fragments.PhotoFragment;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends BaseActivity implements SingersAdapter.Callbacks {
 
     private boolean mPortrait;
 
@@ -35,9 +44,8 @@ public class MainActivity extends AppCompatActivity {
     @BindView(R.id.singers_list)
     RecyclerView singersList;
 
-    private DataProvider mDataProvider;
-
-    private Handler mUiHandler;
+    @Inject
+    DataProvider mDataProvider;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,9 +53,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         ButterKnife.bind(this);
-        mUiHandler = new Handler();
 
-        mDataProvider = new CPDataProvider(this, new CPDataTransformer(), worker(), poster());
+        getAppComponent().inject(this);
 
         mPortrait = findViewById(R.id.desc_holder) == null;
 
@@ -55,24 +62,6 @@ public class MainActivity extends AppCompatActivity {
             singersList.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         }
 
-    }
-
-    private Executor worker() {
-        return new ThreadPoolExecutor(4, 10, 120, TimeUnit.SECONDS, new LinkedBlockingDeque<Runnable>());
-    }
-
-    private Executor poster() {
-        return new Executor() {
-            @Override
-            public void execute(final Runnable command) {
-                mUiHandler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        command.run();
-                    }
-                });
-            }
-        };
     }
 
     @Override
@@ -94,8 +83,18 @@ public class MainActivity extends AppCompatActivity {
                 singersPager.setAdapter(new SingersPagerAdapter(getSupportFragmentManager(), result));
                 tabLayout.setupWithViewPager(singersPager);
             } else {
-                singersList.setAdapter(new SingersAdapter(result));
+                singersList.setAdapter(new SingersAdapter(MainActivity.this, result));
+                if(result != null && result.size() > 0) {
+                    onSingerChosen(result.get(0));
+                }
             }
         }
     };
+
+    @Override
+    public void onSingerChosen(Singer singer) {
+        PhotoFragment photoFragment = (PhotoFragment)getSupportFragmentManager()
+                .findFragmentById(R.id.desc_holder);
+        photoFragment.setSinger(singer);
+    }
 }

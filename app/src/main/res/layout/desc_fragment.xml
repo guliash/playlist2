@@ -30,8 +30,31 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/tracls"
+        android:id="@+id/tracks"
         android:layout_toRightOf="@id/tracks_label"
+        android:layout_toEndOf="@+id/tracks_label"
         android:layout_below="@id/name_label"
         style="@style/Base.TextAppearance.AppCompat.Small" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/albums_label"
+        android:text="@string/albums_label"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@id/tracks"
+        style="@style/Base.TextAppearance.AppCompat.Medium"/>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/albums"
+        android:layout_toRightOf="@id/albums_label"
+        android:layout_toEndOf="@+id/albums_label"
+        android:layout_below="@id/tracks"
+        style="@style/Base.TextAppearance.AppCompat.Small" />
+    
+    <TextView
+        android:layout_width=""
+        android:layout_height="" />
 </RelativeLayout>

@@ -1,15 +1,19 @@
 package ru.yandex.yamblz.playlist2;
 
+import android.content.ContentUris;
 import android.content.Context;
 import android.support.annotation.AnyThread;
 import android.support.annotation.MainThread;
-import android.util.Log;
+import android.support.annotation.NonNull;
 
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.Executor;
 
+import ru.yandex.yamblz.playlist2.structures.Singer;
+
+import static ru.yandex.yamblz.playlist2.SingersContract.CONTENT_URI;
 import static ru.yandex.yamblz.playlist2.SingersContract.Singers;
 
 /**
@@ -51,6 +55,20 @@ public class CPDataProvider implements DataProvider {
                 List<Singer> singers = mDataTransformer.toSingers(mContext.getContentResolver().query(
                         Singers.CONTENT_URI, null, null, null, null));
                 postResult(callback, singers);
+            }
+        });
+    }
+
+    @Override
+    public void getSinger(final int singerId, @NonNull final Callback<Singer> callback) {
+        persistCallback(callback);
+        mWorker.execute(new Runnable() {
+            @Override
+            public void run() {
+                Singer singer = mDataTransformer.toSinger(mContext.getContentResolver().query(
+                        ContentUris.withAppendedId(Singers.CONTENT_URI, singerId),
+                        null, null, null, null));
+                postResult(callback, singer);
             }
         });
     }

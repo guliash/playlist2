@@ -6,8 +6,12 @@ import android.support.annotation.Nullable;
 
 import java.util.List;
 
+import ru.yandex.yamblz.playlist2.structures.Singer;
+
 public interface DataTransformer {
 
     @NonNull List<Singer> toSingers(@Nullable Cursor cursor);
+
+    @Nullable Singer toSinger(@Nullable Cursor cursor);
 
 }
