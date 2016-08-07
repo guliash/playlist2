@@ -42,6 +42,7 @@ public class Singer implements Parcelable {
         albums = in.readInt();
         link = in.readString();
         description = in.readString();
+        cover = in.readParcelable(Cover.class.getClassLoader());
     }
 
     public static final Creator<Singer> CREATOR = new Creator<Singer>() {
@@ -70,6 +71,7 @@ public class Singer implements Parcelable {
         dest.writeInt(albums);
         dest.writeString(link);
         dest.writeString(description);
+        dest.writeParcelable(cover, 0);
     }
 
     public static class Builder {

@@ -1,60 +1,61 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/name_label"
-        android:text="@string/name_label"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentLeft="true"
-        style="@style/Base.TextAppearance.AppCompat.Medium"/>
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/name"
-        android:layout_toRightOf="@id/name_label"
-        android:layout_toEndOf="@id/name_label"
-        style="@style/Base.TextAppearance.AppCompat.Small"/>
+    android:layout_height="wrap_content"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingStart="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingEnd="@dimen/activity_horizontal_margin">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/tracks_label"
-        android:text="@string/tracks_label"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentLeft="true"
-        android:layout_below="@id/name"
-        style="@style/Base.TextAppearance.AppCompat.Medium"/>
-    <TextView
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/tracks"
-        android:layout_toRightOf="@id/tracks_label"
-        android:layout_toEndOf="@+id/tracks_label"
-        android:layout_below="@id/name_label"
-        style="@style/Base.TextAppearance.AppCompat.Small" />
+        android:orientation="vertical">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/name"
+            style="@style/Base.TextAppearance.AppCompat.Large"/>
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/albums_label"
-        android:text="@string/albums_label"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentLeft="true"
-        android:layout_below="@id/tracks"
-        style="@style/Base.TextAppearance.AppCompat.Medium"/>
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/albums"
-        android:layout_toRightOf="@id/albums_label"
-        android:layout_toEndOf="@+id/albums_label"
-        android:layout_below="@id/tracks"
-        style="@style/Base.TextAppearance.AppCompat.Small" />
-    
-    <TextView
-        android:layout_width=""
-        android:layout_height="" />
-</RelativeLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/tracks_label"
+                android:text="@string/tracks_label"
+                style="@style/Base.TextAppearance.AppCompat.Medium"/>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/tracks"
+                style="@style/Base.TextAppearance.AppCompat.Medium" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/albums_label"
+                android:text="@string/albums_label"
+                style="@style/Base.TextAppearance.AppCompat.Medium"/>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/albums"
+                style="@style/Base.TextAppearance.AppCompat.Medium" />
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/more"
+            style="@style/Base.TextAppearance.AppCompat.Small" />
+    </LinearLayout>
+</ScrollView>

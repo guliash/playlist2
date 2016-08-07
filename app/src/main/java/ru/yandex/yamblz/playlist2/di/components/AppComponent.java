@@ -6,7 +6,9 @@ import dagger.Component;
 import ru.yandex.yamblz.playlist2.di.modules.AppModule;
 import ru.yandex.yamblz.playlist2.ui.activities.MainActivity;
 import ru.yandex.yamblz.playlist2.ui.fragments.DescFragment;
-import ru.yandex.yamblz.playlist2.ui.fragments.PhotoFragment;
+import ru.yandex.yamblz.playlist2.ui.fragments.ListFragment;
+import ru.yandex.yamblz.playlist2.ui.fragments.PreviewFragment;
+import ru.yandex.yamblz.playlist2.ui.fragments.TabsFragment;
 
 @Singleton
 @Component(modules = {AppModule.class})
@@ -16,6 +18,9 @@ public interface AppComponent {
 
     void inject(DescFragment descFragment);
 
-    void inject(PhotoFragment photoFragment);
+    void inject(PreviewFragment previewFragment);
 
+    void inject(ListFragment listFragment);
+
+    void inject(TabsFragment tabsFragment);
 }

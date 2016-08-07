@@ -7,7 +7,7 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 import java.util.List;
 
 import ru.yandex.yamblz.playlist2.structures.Singer;
-import ru.yandex.yamblz.playlist2.ui.fragments.PhotoFragment;
+import ru.yandex.yamblz.playlist2.ui.fragments.PreviewFragment;
 
 public class SingersPagerAdapter extends FragmentStatePagerAdapter {
 
@@ -20,7 +20,7 @@ public class SingersPagerAdapter extends FragmentStatePagerAdapter {
 
     @Override
     public Fragment getItem(int position) {
-        return PhotoFragment.newInstance(mSingers.get(position));
+        return PreviewFragment.newInstance(mSingers.get(position));
     }
 
     @Override

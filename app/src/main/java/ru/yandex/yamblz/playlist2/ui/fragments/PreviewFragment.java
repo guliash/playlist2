@@ -1,9 +1,9 @@
 package ru.yandex.yamblz.playlist2.ui.fragments;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
-import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,11 +16,12 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import ru.yandex.yamblz.playlist2.DataProvider;
 import ru.yandex.yamblz.playlist2.R;
 import ru.yandex.yamblz.playlist2.structures.Singer;
 
-public class PhotoFragment extends BaseFragment {
+public class PreviewFragment extends BaseFragment {
 
     private static final String SINGER_EXTRA = "singer";
     private static final String SINGER_ID_EXTRA = "singer_id";
@@ -36,6 +37,12 @@ public class PhotoFragment extends BaseFragment {
     @Inject
     DataProvider dataProvider;
 
+    private Callbacks mCallbacks;
+
+    public interface Callbacks {
+        void onMoreChosen(Singer singer);
+    }
+
     private DataProvider.Callback<Singer> mSingerCallback = new DataProvider.Callback<Singer>() {
         @Override
         public void postResult(@Nullable Singer result) {
@@ -47,25 +54,35 @@ public class PhotoFragment extends BaseFragment {
         }
     };
 
-    public static PhotoFragment newInstance(Singer singer) {
+    public static PreviewFragment newInstance(Singer singer) {
         Log.e("TAG", "SINGER " + singer);
         Bundle bundle = new Bundle();
         bundle.putParcelable(SINGER_EXTRA, singer);
 
-        PhotoFragment photoFragment = new PhotoFragment();
-        photoFragment.setArguments(bundle);
+        PreviewFragment previewFragment = new PreviewFragment();
+        previewFragment.setArguments(bundle);
 
-        return photoFragment;
+        return previewFragment;
     }
 
-    public static PhotoFragment newInstance(int singerId) {
+    public static PreviewFragment newInstance(int singerId) {
         Bundle bundle = new Bundle();
         bundle.putInt(SINGER_ID_EXTRA, singerId);
 
-        PhotoFragment photoFragment = new PhotoFragment();
-        photoFragment.setArguments(bundle);
+        PreviewFragment previewFragment = new PreviewFragment();
+        previewFragment.setArguments(bundle);
 
-        return photoFragment;
+        return previewFragment;
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if(context instanceof Callbacks) {
+            mCallbacks = (Callbacks)context;
+        } else {
+            throw new RuntimeException("Should implement PreviewFragment#Callbacks");
+        }
     }
 
     @Override
@@ -98,7 +115,7 @@ public class PhotoFragment extends BaseFragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.photo_fragment, container, false);
+        View view = inflater.inflate(R.layout.preview_fragment, container, false);
 
         ButterKnife.bind(this, view);
 
@@ -108,7 +125,7 @@ public class PhotoFragment extends BaseFragment {
     @Override
     public void onResume() {
         super.onResume();
-
+        Log.e("TAG", "ON RESUME " + mSinger);
         if(mSinger != null) {
             onSingerSet();
         } else if(mSingerId != NO_SINGER) {
@@ -119,6 +136,11 @@ public class PhotoFragment extends BaseFragment {
     public void setSinger(@Nullable Singer singer) {
         mSinger = singer;
         onSingerSet();
+    }
+
+    @OnClick(R.id.more)
+    void onMoreClick() {
+        mCallbacks.onMoreChosen(mSinger);
     }
 
     public void setSingerId(int singerId) {

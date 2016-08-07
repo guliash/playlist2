@@ -6,5 +6,6 @@
     <string name="albums_label">Albums:</string>
     <string name="description_label">More:</string>
     <string name="more">More</string>
-    <string name="error">Error occured</string>
+    <string name="error">Error occurred</string>
+    <string name="more_label">More:</string>
 </resources>
