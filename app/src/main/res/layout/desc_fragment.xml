@@ -79,6 +79,6 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:id="@+id/more"
-            style="@style/Base.TextAppearance.AppCompat.Small" />
+            style="@style/Base.TextAppearance.AppCompat.Medium" />
     </LinearLayout>
 </ScrollView>
