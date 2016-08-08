@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.concurrent.Executor;
 
-import ru.yandex.yamblz.playlist2.structures.Singer;
+import ru.yandex.yamblz.singerscontracts.Singer;
 
 import static ru.yandex.yamblz.singerscontracts.SingersContract.Singers;
 

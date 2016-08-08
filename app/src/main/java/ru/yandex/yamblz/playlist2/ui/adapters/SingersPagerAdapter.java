@@ -6,8 +6,8 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 
 import java.util.List;
 
-import ru.yandex.yamblz.playlist2.structures.Singer;
 import ru.yandex.yamblz.playlist2.ui.fragments.PreviewFragment;
+import ru.yandex.yamblz.singerscontracts.Singer;
 
 public class SingersPagerAdapter extends FragmentStatePagerAdapter {
 

@@ -13,7 +13,7 @@ import com.squareup.picasso.Picasso;
 import java.util.List;
 
 import ru.yandex.yamblz.playlist2.R;
-import ru.yandex.yamblz.playlist2.structures.Singer;
+import ru.yandex.yamblz.singerscontracts.Singer;
 
 public class SingersAdapter extends RecyclerView.Adapter<SingersAdapter.ViewHolder> {
 

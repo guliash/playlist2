@@ -1,4 +1,4 @@
-package ru.yandex.yamblz.playlist2.structures;
+package ru.yandex.yamblz.singerscontracts;
 
 import android.os.Parcel;
 import android.os.Parcelable;

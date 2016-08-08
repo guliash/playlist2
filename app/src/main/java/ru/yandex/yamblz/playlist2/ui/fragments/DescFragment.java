@@ -20,7 +20,7 @@ import butterknife.ButterKnife;
 import ru.yandex.yamblz.playlist2.DataProvider;
 import ru.yandex.yamblz.playlist2.R;
 import ru.yandex.yamblz.playlist2.di.components.DaggerAppComponent;
-import ru.yandex.yamblz.playlist2.structures.Singer;
+import ru.yandex.yamblz.singerscontracts.Singer;
 
 public class DescFragment extends BaseDialogFragment {
 

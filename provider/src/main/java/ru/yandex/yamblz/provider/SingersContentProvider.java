@@ -10,9 +10,10 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.support.annotation.Nullable;
 import android.support.v4.database.DatabaseUtilsCompat;
-import android.util.Log;
 
 import java.util.List;
+
+import ru.yandex.yamblz.singerscontracts.Singer;
 
 import static ru.yandex.yamblz.singerscontracts.SingersContract.AUTHORITY;
 import static ru.yandex.yamblz.singerscontracts.SingersContract.Singers;

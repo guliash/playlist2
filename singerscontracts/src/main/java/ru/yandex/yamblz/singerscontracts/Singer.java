@@ -1,9 +1,16 @@
-package ru.yandex.yamblz.playlist2.structures;
+package ru.yandex.yamblz.singerscontracts;
 
+import android.database.Cursor;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.support.annotation.NonNull;
+import android.text.TextUtils;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class Singer implements Parcelable {
 
@@ -162,8 +169,62 @@ public class Singer implements Parcelable {
     }
 
     @Override
+    public boolean equals(Object o) {
+        if(!(o instanceof Singer)) {
+            return false;
+        }
+        Singer singer = (Singer)o;
+        return singer.getName().equals(name);
+    }
+
+    @Override
     public String toString() {
         return name;
+    }
+
+    public static List<String> extractGenres(List<Singer> singers) {
+        Set<String> genres = new HashSet<>();
+        for(Singer singer : singers) {
+            genres.addAll(singer.getGenres());
+        }
+        return new ArrayList<>(genres);
+    }
+
+    public static Singer readSinger(@NonNull Cursor cursor) {
+        if(cursor == null) {
+            throw new IllegalArgumentException("Cursor must not be null");
+        }
+        Singer.Builder builder = new Singer.Builder();
+        String genresConcat = cursor.getString(cursor.getColumnIndex(SingersContract.Singers.GENRES));
+        List<String> genres = null;
+        if(!TextUtils.isEmpty(genresConcat)) {
+            genres = Arrays.asList(TextUtils.split(genresConcat, ","));
+        }
+        builder.id(cursor.getInt(cursor.getColumnIndex(SingersContract.Singers.ID)))
+                .genres(genres)
+                .name(cursor.getString(cursor.getColumnIndex(SingersContract.Singers.NAME)))
+                .tracks(cursor.getInt(cursor.getColumnIndex(SingersContract.Singers.TRACKS)))
+                .albums(cursor.getInt(cursor.getColumnIndex(SingersContract.Singers.ALBUMS)))
+                .cover(new Cover(
+                        cursor.getString(cursor.getColumnIndex(SingersContract.Singers.COVER_SMALL)),
+                        cursor.getString(cursor.getColumnIndex(SingersContract.Singers.COVER_BIG))
+                ))
+                .description(cursor.getString(cursor.getColumnIndex(SingersContract.Singers.DESCRIPTION)));
+
+        return builder.build();
+    }
+
+    public static List<Singer> readSingers(@NonNull Cursor cursor) {
+        if(cursor == null) {
+            throw new IllegalArgumentException("Cursor must not be null");
+        }
+        List<Singer> result = new ArrayList<>();
+        cursor.moveToFirst();
+        while(!cursor.isAfterLast()) {
+            result.add(readSinger(cursor));
+            cursor.moveToNext();
+        }
+        return result;
     }
 
 }

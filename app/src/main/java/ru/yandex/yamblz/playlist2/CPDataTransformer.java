@@ -9,8 +9,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import ru.yandex.yamblz.playlist2.structures.Cover;
-import ru.yandex.yamblz.playlist2.structures.Singer;
+import ru.yandex.yamblz.singerscontracts.Cover;
+import ru.yandex.yamblz.singerscontracts.Singer;
 
 import static ru.yandex.yamblz.singerscontracts.SingersContract.*;
 
@@ -24,7 +24,7 @@ public class CPDataTransformer implements DataTransformer {
         }
         cursor.moveToFirst();
         do {
-            singers.add(readSinger(cursor));
+            singers.add(Singer.readSinger(cursor));
         } while(cursor.moveToNext());
         cursor.close();
         return singers;
@@ -38,29 +38,8 @@ public class CPDataTransformer implements DataTransformer {
         }
         cursor.moveToFirst();
 
-        Singer singer = readSinger(cursor);
+        Singer singer = Singer.readSinger(cursor);
         cursor.close();
         return singer;
-    }
-
-    private Singer readSinger(@NonNull Cursor cursor) {
-        Singer.Builder builder = new Singer.Builder();
-        String genresConcat = cursor.getString(cursor.getColumnIndex(Singers.GENRES));
-        List<String> genres = null;
-        if(!TextUtils.isEmpty(genresConcat)) {
-            genres = Arrays.asList(TextUtils.split(genresConcat, ","));
-        }
-        builder.id(cursor.getInt(cursor.getColumnIndex(Singers.ID)))
-                .genres(genres)
-                .name(cursor.getString(cursor.getColumnIndex(Singers.NAME)))
-                .tracks(cursor.getInt(cursor.getColumnIndex(Singers.TRACKS)))
-                .albums(cursor.getInt(cursor.getColumnIndex(Singers.ALBUMS)))
-                .cover(new Cover(
-                        cursor.getString(cursor.getColumnIndex(Singers.COVER_SMALL)),
-                        cursor.getString(cursor.getColumnIndex(Singers.COVER_BIG))
-                ))
-                .description(cursor.getString(cursor.getColumnIndex(Singers.DESCRIPTION)));
-
-        return builder.build();
     }
 }

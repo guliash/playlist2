@@ -17,13 +17,13 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import ru.yandex.yamblz.playlist2.DataProvider;
 import ru.yandex.yamblz.playlist2.R;
-import ru.yandex.yamblz.playlist2.structures.Singer;
 import ru.yandex.yamblz.playlist2.ui.adapters.SingersAdapter;
 import ru.yandex.yamblz.playlist2.ui.adapters.SingersPagerAdapter;
 import ru.yandex.yamblz.playlist2.ui.fragments.DescFragment;
 import ru.yandex.yamblz.playlist2.ui.fragments.ListFragment;
 import ru.yandex.yamblz.playlist2.ui.fragments.PreviewFragment;
 import ru.yandex.yamblz.playlist2.ui.fragments.TabsFragment;
+import ru.yandex.yamblz.singerscontracts.Singer;
 
 public class MainActivity extends BaseActivity implements PreviewFragment.Callbacks, ListFragment.Callbacks {
 

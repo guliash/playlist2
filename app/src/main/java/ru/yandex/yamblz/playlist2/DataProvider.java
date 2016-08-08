@@ -5,7 +5,7 @@ import android.support.annotation.Nullable;
 
 import java.util.List;
 
-import ru.yandex.yamblz.playlist2.structures.Singer;
+import ru.yandex.yamblz.singerscontracts.Singer;
 
 public interface DataProvider {
 

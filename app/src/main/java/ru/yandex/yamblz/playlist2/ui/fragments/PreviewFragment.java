@@ -19,7 +19,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import ru.yandex.yamblz.playlist2.DataProvider;
 import ru.yandex.yamblz.playlist2.R;
-import ru.yandex.yamblz.playlist2.structures.Singer;
+import ru.yandex.yamblz.singerscontracts.Singer;
 
 public class PreviewFragment extends BaseFragment {
 

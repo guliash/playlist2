@@ -5,14 +5,13 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.annotation.Nullable;
-import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
+import ru.yandex.yamblz.singerscontracts.Singer;
 import ru.yandex.yamblz.singerscontracts.SingersContract;
 
 import static ru.yandex.yamblz.provider.DbContract.*;
@@ -88,7 +87,7 @@ public class DbBackend {
         return success;
     }
 
-    public void truncateTable(String tableName) {
+    void truncateTable(String tableName) {
         SQLiteDatabase db = mDbOpenHelper.getWritableDatabase();
         db.execSQL("DELETE FROM " + tableName);
     }
