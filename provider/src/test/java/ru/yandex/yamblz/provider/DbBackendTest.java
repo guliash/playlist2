@@ -63,8 +63,8 @@ public class DbBackendTest {
     }
 
     @Test
-    public void testAllSingersWereInsertedDuringMigration() {
-        mDbBackend.migrateSingers(mSingers);
+    public void allSingersAreInsertedDuringForceUpdate() {
+        mDbBackend.forceSingersUpdate(mSingers);
         Cursor cursor = mDbBackend.getSingers(null, null, null, null);
         Assert.assertEquals(false, cursor == null);
         Assert.assertEquals(cursor.getCount(), mSingers.size());
@@ -72,8 +72,8 @@ public class DbBackendTest {
     }
 
     @Test
-    public void testAllSingersFieldsWereInsertedDuringMigration() {
-        mDbBackend.migrateSingers(mSingers);
+    public void allSingersFieldsWereInsertedDuringForceUpdate() {
+        mDbBackend.forceSingersUpdate(mSingers);
         Cursor cursor = mDbBackend.getSingers(null, null, null, SingersContract.Singers.NAME + " ASC");
 
         Collections.sort(mSingers, new Comparator<Singer>() {
@@ -89,8 +89,8 @@ public class DbBackendTest {
     }
 
     @Test
-    public void testGetSingersProjectionWork() {
-        mDbBackend.migrateSingers(mSingers);
+    public void getSingersProjectionWorks() {
+        mDbBackend.forceSingersUpdate(mSingers);
         String[] proj = new String[]{
                 SingersContract.Singers.ALBUMS,
                 SingersContract.Singers.TRACKS,
@@ -102,8 +102,8 @@ public class DbBackendTest {
     }
 
     @Test
-    public void testGetSingersSelectionWork() {
-        mDbBackend.migrateSingers(mSingers);
+    public void getSingersSelectionWorks() {
+        mDbBackend.forceSingersUpdate(mSingers);
         String selection = SingersContract.Singers.NAME + "=?";
         String arg = mSingers.get(0).getName();
         String[] selectionArgs = new String[]{arg};
@@ -115,13 +115,13 @@ public class DbBackendTest {
     }
 
     @Test
-    public void testInsertGenreWorks() {
+    public void insertGenreWorks() {
         Assert.assertEquals(true, mDbBackend.insertGenre(mGenres.get(0)));
         Assert.assertEquals(true, mDbBackend.selectGenreId(mGenres.get(0)) != -1);
     }
 
     @Test
-    public void testInsertGenresWorks() {
+    public void insertGenresWorks() {
         Assert.assertEquals(true, mDbBackend.insertGenres(mGenres));
         for (String genre : mGenres) {
             Assert.assertEquals(true, mDbBackend.selectGenreId(genre) != -1);
@@ -129,7 +129,7 @@ public class DbBackendTest {
     }
 
     @Test
-    public void testInsertSingerWorks() {
+    public void insertSingerWorks() {
         Singer singer = mSingers.get(0);
         Assert.assertEquals(true, mDbBackend.insertSinger(singer));
         Cursor cursor = mDbBackend.getSingers(null, SingersContract.Singers.NAME + "=?",
@@ -138,7 +138,7 @@ public class DbBackendTest {
     }
 
     @Test
-    public void testInsertSingersWorks() {
+    public void insertSingersWorks() {
         Assert.assertEquals(true, mDbBackend.insertSingers(mSingers));
         Cursor cursor = mDbBackend.getSingers(null, null, null, SingersContract.Singers.NAME + " ASC");
         Assert.assertEquals(mSingers.size(), cursor.getCount());
@@ -157,7 +157,7 @@ public class DbBackendTest {
     }
 
     @Test
-    public void testInsertArtistGenres() {
+    public void insertArtistGenres() {
         mDbBackend.insertSingers(mSingers);
         mDbBackend.insertGenres(Singer.extractGenres(mSingers));
         mDbBackend.insertArtistGenres(mSingers);

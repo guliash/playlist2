@@ -45,7 +45,7 @@ public class SingersContentProvider extends ContentProvider {
     @Override
     public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
         if(!checkIfSingersWereInserted()) {
-            mDbBackend.migrateSingers(retrieveSingers());
+            mDbBackend.forceSingersUpdate(retrieveSingers());
             setSingersInserted();
         }
         switch (sUriMatcher.match(uri)) {

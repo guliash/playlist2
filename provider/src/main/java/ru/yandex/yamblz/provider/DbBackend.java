@@ -29,6 +29,16 @@ public class DbBackend {
         mDbOpenHelper = dbOpenHelper;
     }
 
+    /**
+     * Returns {@link Cursor} of singers with the args applied to the query.
+     * The columns names are taken from {@link ru.yandex.yamblz.singerscontracts.SingersContract}
+     * The arguments should use {@link ru.yandex.yamblz.singerscontracts.SingersContract}
+     * @param projection the columns needed
+     * @param selection selection filter
+     * @param selectionArgs args for the selection
+     * @param sortOrder sorting order
+     * @return cursor of singers
+     */
     @Nullable public Cursor getSingers(@Nullable String[] projection, @Nullable String selection,
                                        @Nullable String[] selectionArgs, @Nullable String sortOrder) {
         String from = "(SELECT %s, %s, group_concat(%s, ',') AS %s, %s, %s, %s, %s, %s FROM %s LEFT JOIN " +
@@ -68,7 +78,13 @@ public class DbBackend {
         return cursor;
     }
 
-    public boolean migrateSingers(List<Singer> singers) {
+    /**
+     * Clears all tables from the previous data and inserts the new data.
+     * This methods runs in a transaction.
+     * @param singers the singers to insert
+     * @return {@code true} if transaction was successful
+     */
+    public boolean forceSingersUpdate(List<Singer> singers) {
         SQLiteDatabase db = mDbOpenHelper.getWritableDatabase();
         db.beginTransaction();
         boolean success = true;
@@ -87,11 +103,20 @@ public class DbBackend {
         return success;
     }
 
+    /**
+     * Clears table with the given name
+     * @param tableName table name to clear
+     */
     void truncateTable(String tableName) {
         SQLiteDatabase db = mDbOpenHelper.getWritableDatabase();
         db.execSQL("DELETE FROM " + tableName);
     }
 
+    /**
+     * Inserts genre to the genres table
+     * @param genre genre to insert
+     * @return {@code true} if successfully inserted
+     */
     public boolean insertGenre(String genre) {
         SQLiteDatabase db = mDbOpenHelper.getWritableDatabase();
         ContentValues cv = new ContentValues();
@@ -99,6 +124,11 @@ public class DbBackend {
         return db.insert(Genres.TABLE_NAME, null, cv) != -1;
     }
 
+    /**
+     * Inserts genres to the genres table
+     * @param genres genres to insert
+     * @return {@code true} if all genres were inserted, {@code false} if at least one of them failed
+     */
     public boolean insertGenres(List<String> genres) {
         boolean success = true;
         for(String genre : genres) {
@@ -107,6 +137,11 @@ public class DbBackend {
         return success;
     }
 
+    /**
+     * Inserts singer to the singers table
+     * @param singer the singer to insert
+     * @return {@code true} if the singer was inserted
+     */
     public boolean insertSinger(Singer singer) {
         SQLiteDatabase db = mDbOpenHelper.getWritableDatabase();
         ContentValues cv = new ContentValues();
@@ -120,6 +155,11 @@ public class DbBackend {
         return (db.insert(Singers.TABLE_NAME, null, cv) != -1);
     }
 
+    /**
+     * Inserts singers to the singers table
+     * @param singers the singers to insert
+     * @return {@code true} if all of the singers were inserted
+     */
     public boolean insertSingers(List<Singer> singers) {
         boolean success = true;
         for(Singer singer : singers) {
@@ -128,6 +168,12 @@ public class DbBackend {
         return success;
     }
 
+    /**
+     * Fills artists_genres table from singers collection
+     * NOTE: {@link DbContract.SingersGenres} contains foreign keys constraints, so singers and
+     * genres should exist at the tables
+     * @param singers the singers to insert
+     */
     public void insertArtistGenres(List<Singer> singers) {
         List<String> genres = Singer.extractGenres(singers);
         List<Long> ids = selectGenresIds(genres);
@@ -147,6 +193,11 @@ public class DbBackend {
         }
     }
 
+    /**
+     * Select ids for the given list of genres
+     * @param genres the genres
+     * @return the ids, some ids can be {@code -1} if no rows were found
+     */
     public List<Long> selectGenresIds(List<String> genres) {
         List<Long> ids = new ArrayList<>();
         for(String genre : genres) {
@@ -155,6 +206,11 @@ public class DbBackend {
         return ids;
     }
 
+    /**
+     * Selects id for the given genre
+     * @param genre the genre
+     * @return the id of the given genre, {@code -1} if not found
+     */
     public long selectGenreId(String genre) {
         SQLiteDatabase db = mDbOpenHelper.getReadableDatabase();
         Cursor cursor = db.query(Genres.TABLE_NAME, null, Genres.NAME + "=?",
