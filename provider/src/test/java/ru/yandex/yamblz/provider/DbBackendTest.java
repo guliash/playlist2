@@ -1,6 +1,7 @@
 package ru.yandex.yamblz.provider;
 
 import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.support.annotation.NonNull;
 
 import junit.framework.Assert;
@@ -22,13 +23,15 @@ import ru.yandex.yamblz.singerscontracts.Singer;
 import ru.yandex.yamblz.singerscontracts.SingersContract;
 
 @RunWith(RobolectricTestRunner.class)
-@Config(constants = BuildConfig.class ,manifest = Config.NONE)
+@Config(constants = BuildConfig.class, manifest = Config.NONE)
 public class DbBackendTest {
 
     private List<Singer> mSingers = new ArrayList<>();
     private List<String> mGenres = new ArrayList<>();
-    @NonNull private DbOpenHelper mDbOpenHelper;
-    @NonNull private DbBackend mDbBackend;
+    @NonNull
+    private DbOpenHelper mDbOpenHelper;
+    @NonNull
+    private DbBackend mDbBackend;
 
     @Before
     public void init() {
@@ -62,7 +65,7 @@ public class DbBackendTest {
     @Test
     public void testAllSingersWereInsertedDuringMigration() {
         mDbBackend.migrateSingers(mSingers);
-        Cursor cursor = mDbBackend.getSingers(null, null, null,null);
+        Cursor cursor = mDbBackend.getSingers(null, null, null, null);
         Assert.assertEquals(false, cursor == null);
         Assert.assertEquals(cursor.getCount(), mSingers.size());
         cursor.close();
@@ -88,7 +91,7 @@ public class DbBackendTest {
     @Test
     public void testGetSingersProjectionWork() {
         mDbBackend.migrateSingers(mSingers);
-        String[] proj = new String[] {
+        String[] proj = new String[]{
                 SingersContract.Singers.ALBUMS,
                 SingersContract.Singers.TRACKS,
                 SingersContract.Singers.NAME
@@ -103,10 +106,10 @@ public class DbBackendTest {
         mDbBackend.migrateSingers(mSingers);
         String selection = SingersContract.Singers.NAME + "=?";
         String arg = mSingers.get(0).getName();
-        String[] selectionArgs = new String[] { arg };
+        String[] selectionArgs = new String[]{arg};
         Cursor cursor = mDbBackend.getSingers(null, selection, selectionArgs, null);
         List<Singer> dbSingers = Singer.readSingers(cursor);
-        for(Singer singer : dbSingers) {
+        for (Singer singer : dbSingers) {
             Assert.assertEquals(true, singer.getName().equals(arg));
         }
     }
@@ -120,7 +123,7 @@ public class DbBackendTest {
     @Test
     public void testInsertGenresWorks() {
         Assert.assertEquals(true, mDbBackend.insertGenres(mGenres));
-        for(String genre : mGenres) {
+        for (String genre : mGenres) {
             Assert.assertEquals(true, mDbBackend.selectGenreId(genre) != -1);
         }
     }
@@ -130,7 +133,7 @@ public class DbBackendTest {
         Singer singer = mSingers.get(0);
         Assert.assertEquals(true, mDbBackend.insertSinger(singer));
         Cursor cursor = mDbBackend.getSingers(null, SingersContract.Singers.NAME + "=?",
-                new String[] {singer.getName()}, null);
+                new String[]{singer.getName()}, null);
         Assert.assertEquals(1, cursor.getCount());
     }
 
@@ -148,9 +151,64 @@ public class DbBackendTest {
         });
 
         List<Singer> bdSingers = Singer.readSingers(cursor);
-        for(int i = 0; i < mSingers.size(); i++) {
+        for (int i = 0; i < mSingers.size(); i++) {
             Assert.assertEquals(true, mSingers.get(i).getName().equals(bdSingers.get(i).getName()));
         }
+    }
+
+    @Test
+    public void testInsertArtistGenres() {
+        mDbBackend.insertSingers(mSingers);
+        mDbBackend.insertGenres(Singer.extractGenres(mSingers));
+        mDbBackend.insertArtistGenres(mSingers);
+        SQLiteDatabase database = mDbOpenHelper.getReadableDatabase();
+        for (Singer singer : mSingers) {
+            for (String genre : singer.getGenres()) {
+                long genreId = mDbBackend.selectGenreId(genre);
+                Cursor cursor = database.query(DbContract.SingersGenres.TABLE_NAME, null,
+                        DbContract.SingersGenres.GENRE_ID + "=? AND " + DbContract.SingersGenres.SINGER_ID + "=?",
+                        new String[]{String.valueOf(genreId), String.valueOf(singer.getId())}, null,
+                        null, null);
+                Assert.assertEquals(1, cursor.getCount());
+                cursor.close();
+            }
+        }
+    }
+
+    @Test
+    public void selectGenresIdsReturnsCorrectIds() {
+        SQLiteDatabase database = mDbOpenHelper.getReadableDatabase();
+        List<String> genres = Singer.extractGenres(mSingers);
+        mDbBackend.insertGenres(genres);
+        List<Long> ids = mDbBackend.selectGenresIds(genres);
+        for (int i = 0; i < genres.size(); i++) {
+            String genre = genres.get(i);
+            Cursor cursor = database.query(DbContract.Genres.TABLE_NAME, null, DbContract.Genres.NAME + "=?",
+                    new String[]{genre}, null, null, null);
+            cursor.moveToFirst();
+            long id = cursor.getLong(cursor.getColumnIndex(DbContract.Genres.ID));
+            Assert.assertEquals(id, ids.get(i).longValue());
+            cursor.close();
+        }
+    }
+
+    @Test
+    public void selectGenreIdReturnsCorrectId() {
+        String genre = mGenres.get(1);
+
+        mDbBackend.insertGenres(mGenres);
+
+        SQLiteDatabase database = mDbOpenHelper.getReadableDatabase();
+
+        long id = mDbBackend.selectGenreId(genre);
+
+        Cursor cursor = database.query(DbContract.Genres.TABLE_NAME, null, DbContract.Genres.NAME + "=?",
+                new String[]{genre}, null, null, null);
+        cursor.moveToFirst();
+        long dbId = cursor.getLong(cursor.getColumnIndex(DbContract.Genres.ID));
+
+        cursor.close();
+        Assert.assertEquals(id, dbId);
     }
 
 }
